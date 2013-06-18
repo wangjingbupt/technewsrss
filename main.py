@@ -11,12 +11,12 @@ import time
 HACKER_NEWS_RSS_URL = 'https://news.ycombinator.com/rss'
 STARTUP_NEWS_RSS_URL = 'http://news.dbanotes.net/rss'
 
-CONF = {'host':'127.0.0.1','port':27017}
+CONF = {'host':'127.0.0.1','port':27823}
 
-APP_KEY = '703474722'
-APP_SECRET = '6514a66788eca2d4ecc214a383121c7d'
+APP_KEY = '3630429777'
+APP_SECRET = '3ea78b0fc46a79184a160e4c2676a431'
 
-TOKEN = ''
+TOKEN = '2.00zyFgrDzcugxD252776ad8fvuBiOB'
 
 if __name__ == '__main__':
 
@@ -24,16 +24,36 @@ if __name__ == '__main__':
   mObj = Mongo(CONF)
   wObj = Weibo(APP_KEY , APP_SECRET , TOKEN)
   items = cObj.getParseData(HACKER_NEWS_RSS_URL)
-
+  
   for item in items:
+    print item
     res = mObj.checkItemExists(item)
+    print res
     if not res:
       continue
     item['time'] = time.time() 
     res = mObj.saveItem(item)
-    if res :
+    print res
+    if not res :
       continue
-    wObj.pubFeed(item)
+    wObj.pubHackerFeed(item)
+		sys.exit()
 
+  items = cObj.getParseData(STARTUP_NEWS_RSS_URL)
+  
+  for item in items:
+    print item
+    res = mObj.checkItemExists(item)
+    print res
+    if not res:
+      continue
+    item['time'] = time.time() 
+    res = mObj.saveItem(item)
+    print res
+    if not res :
+      continue
+    wObj.pubStartupFeed(item)
+		sys.exit()
+  
   
 

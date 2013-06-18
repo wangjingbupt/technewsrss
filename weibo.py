@@ -5,6 +5,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from weiboSDK import APIClient
 
+import urlparse
+
 class Weibo:
 
   def __init__(self,appKey,appSecret,access_token):
@@ -12,9 +14,15 @@ class Weibo:
     tm = int(time.time()) + 30*86400 
     self.client.set_access_token(access_token,tm)
 
-  def pubFeed(self,item):
-    content = item['title']
-
+  def pubHackerFeed(self,item):
+    result=urlparse.urlparse(item['link'])
+    host = result.netloc	  
+    content = item['link'] + ' <'+item['title'] + '> ('+ host+')  #hacker news#'
+    res = self.client.statuses.update.post(status = content)
+    print res
+ 
+  def pubStartupFeed(self,item):
+    content = item['link'] + ' <'+item['title'] + '>  #startup news#'
     res = self.client.statuses.update.post(status = content)
     print res
  

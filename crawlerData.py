@@ -11,8 +11,8 @@ class CrawlerData:
     d = feedparser.parse(url)
     items = []
     if 'entries' in d:
-      for data in d['entries']
-        item = {'title': data['title'],'link':data['title']}
+      for data in d['entries']:
+        item = {'title': data['title'],'link':data['link']}
         items.append(item)
 
     return items

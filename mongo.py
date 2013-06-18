@@ -10,9 +10,9 @@ class Mongo:
     host = conf['host']
     port = conf['port']
     self.conn = pymongo.Connection(host, port)
-    self.db = self.conn.tech_new
+    self.db = self.conn.tech_news
 
-  def checkItemExists(item):
+  def checkItemExists(self,item):
     if not self.db:
       return False
     
@@ -22,7 +22,7 @@ class Mongo:
 
     return True
 
-  def saveItem(item):
+  def saveItem(self,item):
     if not self.db:
       return False
  
