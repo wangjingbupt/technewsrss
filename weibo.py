@@ -20,13 +20,21 @@ class Weibo:
     host = result.netloc	  
 
     sentToPocket = 'http://getpocket.com/edit?'+urlencode({'url':item['link'],'title':item['title']})
-    content = item['link'] + ' <'+item['title'] + '> ('+ host+')  #hacker news#'+ ' (save to pocket '+sentToPocket+' )'
+    if len(item['title']) > 70 :
+      title = item['title'][0:70]+'...'
+    else:
+      title = item['title']
+    content = item['link'] + ' <'+title + '> ('+ host+')  #hacker news#'+ ' (save to pocket '+sentToPocket+' )'
     res = self.client.statuses.update.post(status = content)
     print res
  
   def pubStartupFeed(self,item):
     sentToPocket = 'http://getpocket.com/edit?'+urlencode({'url':item['link'],'title':item['title']})
-    content = item['link'] + ' <'+item['title'] + '>  #startup news# (save to pocket ' + sentToPocket+' )'
+    if len(item['title']) > 90 :
+      title = item['title'][0:90]+'...'
+    else:
+      title = item['title']
+    content = item['link'] + ' <'+title + '>  #startup news# (save to pocket ' + sentToPocket+' )'
     res = self.client.statuses.update.post(status = content)
     print res
  
