@@ -27,8 +27,8 @@ def hackNews(cObj,mObj,wObj):
     if not res :
       continue
     wObj.pubHackerFeed(item)
-    sys.exit()
-
+    return True
+  return False
 
 def startupNews(cObj,mObj,wObj): 
 
@@ -50,7 +50,8 @@ def startupNews(cObj,mObj,wObj):
     if not res :
       continue
     wObj.pubStartupFeed(item)
-    sys.exit()
+    return True
+  return False
   
   
 if __name__ == '__main__':
@@ -61,12 +62,12 @@ if __name__ == '__main__':
   fObj = open('flag','r')
   flag = int(fObj.read().strip())
   if flag == 1:
-    startupNews(cObj,mObj,wObj)
-    hackNews(cObj,mObj,wObj)
+    if not startupNews(cObj,mObj,wObj):
+      hackNews(cObj,mObj,wObj)
     flag = 0
   else:
-    hackNews(cObj,mObj,wObj)
-    startupNews(cObj,mObj,wObj)
+    if not hackNews(cObj,mObj,wObj):
+      startupNews(cObj,mObj,wObj)
     flag = 1
   fObj.close()
   fObj = open('flag','w')
