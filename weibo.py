@@ -6,6 +6,7 @@ sys.setdefaultencoding('utf-8')
 from weiboSDK import APIClient
 
 import urlparse
+from urllib import urlencode
 
 class Weibo:
 
@@ -17,12 +18,15 @@ class Weibo:
   def pubHackerFeed(self,item):
     result=urlparse.urlparse(item['link'])
     host = result.netloc	  
-    content = item['link'] + ' <'+item['title'] + '> ('+ host+')  #hacker news#'
+
+    sentToPocket = 'http://getpocket.com/edit?'+urlencode({'url':item['link'],'title':item['title']})
+    content = item['link'] + ' <'+item['title'] + '> ('+ host+')  #hacker news#'+ ' (save to pocket '+sentToPocket+' )'
     res = self.client.statuses.update.post(status = content)
     print res
  
   def pubStartupFeed(self,item):
-    content = item['link'] + ' <'+item['title'] + '>  #startup news#'
+    sentToPocket = 'http://getpocket.com/edit?'+urlencode({'url':item['link'],'title':item['title']})
+    content = item['link'] + ' <'+item['title'] + '>  #startup news# (save to pocket ' + sentToPocket+' )'
     res = self.client.statuses.update.post(status = content)
     print res
  
