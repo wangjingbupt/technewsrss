@@ -5,6 +5,17 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 import feedparser
 import gzip, time, hmac, base64, hashlib, urllib, urllib2, logging, mimetypes, collections
+from urllib2 import Request, urlopen, URLError, HTTPError
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 _HTTP_GET = 'GET'
 _HTTP_POST = 'POST'
@@ -21,8 +32,26 @@ class CrawlerData:
 
     return items
 
+  def _http_call_set_cookie(self,the_url, params = {} , method = _HTTP_GET , header = {}):
+
+    params = self._encode_params(params)
+    http_url = '%s?%s' % (the_url, params) if method==_HTTP_GET else the_url
+    http_body = None if method==_HTTP_GET else params
+    req = urllib2.Request(http_url, data=http_body)
+    for k,v in header.iteritems():
+      req.add_header(k, v)
+    try:
+      resp = urllib2.urlopen(req)
+      try:
+        setCookie = resp.info().getheader('set-Cookie')
+      except:
+        setCookie = ''
+      return setCookie
+    except urllib2.HTTPError, e:
+      return False 
+
     
-  def _http_call(self,the_url, params = {} , method = _HTTP_GET):
+  def _http_call(self,the_url, params = {} , method = _HTTP_GET , header = {},timeout=10):
     '''
     send an http request and return a json object if no error occurred.
     '''
@@ -30,12 +59,18 @@ class CrawlerData:
     http_url = '%s?%s' % (the_url, params) if method==_HTTP_GET else the_url
     http_body = None if method==_HTTP_GET else params
     req = urllib2.Request(http_url, data=http_body)
-    req.add_header('Accept-Encoding', 'gzip')
+    #req.add_header('Accept-Encoding', 'gzip')
+    for k,v in header.iteritems():
+      req.add_header(k, v)
     try:
-      resp = urllib2.urlopen(req)
+      resp = urllib2.urlopen(req,timeout=timeout)
       body = self._read_body(resp)
-      return body
-    except urllib2.HTTPError, e:
+      try:
+        r = json.loads(body)
+      except:
+        r = body
+      return r
+    except:
       return False 
 
   def _read_body(self,obj):
@@ -63,4 +98,5 @@ class CrawlerData:
             qv = str(v)
             args.append('%s=%s' % (k, urllib.quote(qv)))
     return '&'.join(args)
+
 

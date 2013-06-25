@@ -36,8 +36,8 @@ def startupNews(cObj,mObj,wObj):
   count = 0
   
   for item in items:
-    if count > 30:
-      break
+    #if count > 100:
+    #  break
     count +=1
     print item
     res = mObj.checkItemExists(item)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
   cObj = CrawlerData()
   mObj = Mongo(CONF)
   wObj = Weibo(APP_KEY , APP_SECRET , TOKEN)
-  fObj = open('flag','r')
+  fObj = open('/home/erik/technewsrss/flag','r')
   flag = int(fObj.read().strip())
   if flag == 1:
     if not startupNews(cObj,mObj,wObj):
@@ -70,7 +70,7 @@ if __name__ == '__main__':
       startupNews(cObj,mObj,wObj)
     flag = 1
   fObj.close()
-  fObj = open('flag','w')
+  fObj = open('/home/erik/technewsrss/flag','w')
   fObj.write(str(flag))
   fObj.close()
 
