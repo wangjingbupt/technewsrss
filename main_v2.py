@@ -8,9 +8,11 @@ from mongo import Mongo
 from weibo import Weibo
 from blog import Blog
 from urllib import urlencode
+from login import Login
 import time
 from conf import *
 import HTMLEntity
+import re
 
 HACKER_NEWS_RSS_URL = 'https://news.ycombinator.com/rss'
 STARTUP_NEWS_RSS_URL = 'http://news.dbanotes.net/rss'
@@ -21,7 +23,7 @@ def getContent(cObj,link):
     content = ''
   
     url = 'https://www.readability.com/api/content/v1/parser'
-    param ={'token':'7b112428b83ae0b3d70d52d13d2787826883dc9d','url':link}
+    param ={'token':READABILITY_TOKEN,'url':link}
     rs =  cObj._http_call(url,param)
     if not rs:
       return False
@@ -78,7 +80,19 @@ if __name__ == '__main__':
   cObj = CrawlerData()
   mObj = Mongo(CONF)
   wObj = Weibo(APP_KEY , APP_SECRET , TOKEN)
-  bObj = Blog(cObj,LOGIN_COOKIE,wObj)
+  lObj = Login()
+  cookie = lObj.login(USERNAME,PASSWORD)
+  if not cookie:
+    print 'error'
+    sys.exit()
+  cookie = re.sub('domain.*?[;,]','',cookie)
+  cookie = re.sub('[Hh]ttponly,','',cookie)
+  cookie = re.sub('path=/;','',cookie)
+  cookie +=';'
+  print cookie
+
+  
+  bObj = Blog(cObj,cookie,wObj)
   fObj = open('/home/erik/technewsrss/flag2','r')
   flag = int(fObj.read().strip())
   if flag == 1:

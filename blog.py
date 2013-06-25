@@ -110,7 +110,7 @@ class Blog:
     params['pic_path'] = blogImgUrl
     params['weibo_result'] = weiboContent
     while 1:
-      res = self.cObj._http_call(the_url = url ,params = params, header = header, method = 'POST',timeout = 2)
+      res = self.cObj._http_call(the_url = url ,params = params, header = header, method = 'POST',timeout = 4)
       print res
       if res == False:
         time.sleep(5)
