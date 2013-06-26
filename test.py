@@ -9,6 +9,7 @@ from weibo import Weibo
 from blog import Blog
 import time
 from urllib import urlencode
+from login import Login
 from conf import *
 
 import HTMLEntity
@@ -17,6 +18,9 @@ HACKER_NEWS_RSS_URL = 'https://news.ycombinator.com/rss'
 STARTUP_NEWS_RSS_URL = 'http://news.dbanotes.net/rss'
 
 if __name__ == '__main__':
+  lObj = Login()
+  lObj.login('wangjingbupt@139.com','wangjing823')
+  sys.exit()
 
   #print unicode('0x53F6').encode('UTF-8')
   #print unicode('作')

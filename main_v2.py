@@ -56,8 +56,12 @@ def hackNews(cObj,mObj,bObj):
 def startupNews(cObj,mObj,bObj): 
 
   items = cObj.getParseData(STARTUP_NEWS_RSS_URL)
+  count = 0
   
   for item in items:
+    if count > 80:
+      break
+    count +=1
     res = mObj.checkItemExists(item)
     if not res:
       continue
@@ -95,14 +99,14 @@ if __name__ == '__main__':
   bObj = Blog(cObj,cookie,wObj)
   fObj = open('/home/erik/technewsrss/flag2','r')
   flag = int(fObj.read().strip())
-  if flag == 1:
+  if flag < 3:
     if not startupNews(cObj,mObj,bObj):
       hackNews(cObj,mObj,bObj)
-    flag = 0
+    flag += 1
   else:
     if not hackNews(cObj,mObj,bObj):
       startupNews(cObj,mObj,bObj)
-    flag = 1
+    flag = 0
   fObj.close()
   fObj = open('/home/erik/technewsrss/flag2','w')
   fObj.write(str(flag))

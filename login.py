@@ -101,7 +101,7 @@ class Login:
     )
     result = urllib2.urlopen(req)
     text = result.read()
-    if text.find('"uid":"3314149837"') > 0:
+    if text.find('"uid":"') > 0:
       cookie = result.info().getheader('Set-Cookie')
       return cookie
     return None
