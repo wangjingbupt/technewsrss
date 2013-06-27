@@ -21,6 +21,10 @@ STARTUP_NEWS_RSS_URL = 'http://news.dbanotes.net/rss'
 def getContent(cObj,link):
 
     content = ''
+    style="style=\"font-family: 'Microsoft YaHei';font-size:18px;display: block;margin:20px 0;line-height:28px;\""
+    style2="style=\"font-family: 'Microsoft YaHei';font-size:26px;display: block;margin:20px 0;line-height:32px;\""
+    style3="style=\"font-family: 'Microsoft YaHei';font-size:23px;display: block;margin:20px 0;line-height:28px;\""
+    style4="style=\"font-family: 'Microsoft YaHei';font-size:20px;display: block;margin:20px 0;line-height:28px;\""
   
     url = 'https://www.readability.com/api/content/v1/parser'
     param ={'token':READABILITY_TOKEN,'url':link}
@@ -28,8 +32,14 @@ def getContent(cObj,link):
     if not rs:
       return False
     if 'content' in rs:
-      content =  HTMLEntity.decode(rs['content'])
-    if len(content) < 200:
+      c = rs['content']
+      c = re.sub('<([a-z ]+)>','<\\1 '+style+' >',c) 
+      c = re.sub('<[hH]1>','<h1 '+style2+' >',c) 
+      c = re.sub('<[hH]2>','<h2 '+style3+' >',c) 
+      c = re.sub('<[hH]3>','<h3 '+style4+' >',c) 
+
+      content =  HTMLEntity.decode(c)
+    if len(content) < 1000:
       return False
 
     return content
@@ -49,7 +59,8 @@ def hackNews(cObj,mObj,bObj):
       continue
     #wObj.pubHackerFeed(item)
     item['content'] = content
-    bObj.pubHackerLongWeibo(item)
+    if not bObj.pubHackerLongWeibo(item):
+      continue
     return True
   return False
 
@@ -73,7 +84,8 @@ def startupNews(cObj,mObj,bObj):
     if not res :
       continue
     item['content'] = content
-    bObj.pubStartupLongWeibo(item)
+    if not bObj.pubStartupLongWeibo(item):
+      continue
     #wObj.pubStartupFeed(item)
     return True
   return False

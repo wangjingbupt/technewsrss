@@ -84,7 +84,7 @@ class Blog:
     self._setCookies()
     content = '原文地址: <a href="'+link+'">'+link+'</a><br>'+content
     blogId = self._postBlog(title,content)
-    #blogId = 'd3182d790101ktgf'
+    #blogId = 'c589e9cd0101gdjl'
     if blogId:
       print blogId
       time.sleep(20)

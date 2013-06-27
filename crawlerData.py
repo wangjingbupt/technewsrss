@@ -51,7 +51,7 @@ class CrawlerData:
       return False 
 
     
-  def _http_call(self,the_url, params = {} , method = _HTTP_GET , header = {},timeout=10):
+  def _http_call(self,the_url, params = {} , method = _HTTP_GET , header = {},timeout=20):
     '''
     send an http request and return a json object if no error occurred.
     '''

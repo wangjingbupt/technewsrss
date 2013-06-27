@@ -11,6 +11,7 @@ import time
 from urllib import urlencode
 from login import Login
 from conf import *
+import re
 
 import HTMLEntity
 
@@ -19,8 +20,12 @@ STARTUP_NEWS_RSS_URL = 'http://news.dbanotes.net/rss'
 
 if __name__ == '__main__':
   lObj = Login()
-  lObj.login('wangjingbupt@139.com','wangjing823')
-  sys.exit()
+  cookie = lObj.login(USERNAME,PASSWORD)
+  cookie = re.sub('domain.*?[;,]','',cookie)
+  cookie = re.sub('[Hh]ttponly,','',cookie)
+  cookie = re.sub('path=/;','',cookie)
+  cookie +=';'
+  
 
   #print unicode('0x53F6').encode('UTF-8')
   #print unicode('作')
@@ -28,7 +33,8 @@ if __name__ == '__main__':
   cObj = CrawlerData()
   mObj = Mongo(CONF)
   wObj = Weibo(APP_KEY , APP_SECRET , TOKEN)
-  bObj = Blog(cObj,LOGIN_COOKIE,wObj)
+  bObj = Blog(cObj,cookie,wObj)
+  print cookie
 
   #a = wObj.client.short_url.shorten.post(url_long = 'http://www.youku.com/')
   #print a['urls'][0]['url_short']
@@ -38,14 +44,28 @@ if __name__ == '__main__':
   ss = 1
   
   for item in items:
-    if ss == 0:
-      ss +=1
+    ss +=1
+    if ss !=6:
       continue
+    print item['title']
+    print ss
     print item['link']
     url = 'https://www.readability.com/api/content/v1/parser'
     param ={'token':'7b112428b83ae0b3d70d52d13d2787826883dc9d','url':item['link']}
     rs =  cObj._http_call(url,param)
-    content =  HTMLEntity.decode(rs['content'])
+    style="style=\"font-family: 'Microsoft YaHei';font-size:18px;display: block;margin:20px 0;line-height:28px;\""
+    style2="style=\"font-family: 'Microsoft YaHei';font-size:26px;display: block;margin:20px 0;line-height:32px;\""
+    style3="style=\"font-family: 'Microsoft YaHei';font-size:23px;display: block;margin:20px 0;line-height:28px;\""
+    style4="style=\"font-family: 'Microsoft YaHei';font-size:20px;display: block;margin:20px 0;line-height:28px;\""
+    c = rs['content']
+    c = re.sub('<([a-z ]+)>','<\\1 '+style+' >',c) 
+    c = re.sub('<[hH]1>','<h1 '+style2+' >',c) 
+    c = re.sub('<[hH]2>','<h2 '+style3+' >',c) 
+    c = re.sub('<[hH]3>','<h3 '+style4+' >',c) 
+    
+    content =  HTMLEntity.decode(c)
+    print content
+    sys.exit()
     title = item['title']
     item['content'] = content
     #content = '123'
