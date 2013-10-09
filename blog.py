@@ -111,11 +111,8 @@ class Blog:
     params['weibo_result'] = weiboContent
     c = 0
     while 1:
-      res = self.cObj._http_call(the_url = url ,params = params, header = header, method = 'POST',timeout = 4)
+      res = self.cObj._http_call(the_url = url ,params = params, header = header, method = 'POST')
       print res
-      if res == False:
-        time.sleep(5)
-        continue
       if 'code' in res and  res['code'] =='A00321':
         c +=1
         time.sleep(60)

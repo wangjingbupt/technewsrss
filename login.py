@@ -12,6 +12,7 @@ import os
 import rsa
 import binascii
 
+
 cookiejar = cookielib.LWPCookieJar()
 cookie_support = urllib2.HTTPCookieProcessor(cookiejar)
 opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler)
@@ -20,10 +21,10 @@ urllib2.install_opener(opener)
 parameters = {
     'entry': 'weibo',
     'callback': 'sinaSSOController.preloginCallBack',
-    'su': 'TGVuZGZhdGluZyU0MHNpbmEuY29t',
+    'su': 'd2FuZ2ppbmdidXB0JTQwMTM5LmNvbQ==',
     'rsakt': 'mod',
     'checkpin': '1',
-    'client': 'ssologin.js(v1.4.10)',
+    'client': 'ssologin.js(v1.4.11)',
     '_': '1362560902427'
 }
 
@@ -79,7 +80,7 @@ class Login:
 
   def login(self,username, pwd):
 
-    url = 'http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.10)'
+    url = 'http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.11)'
     try:
       servertime, nonce, pubkey, rsakv = self.get_servertime()
     except:
@@ -105,4 +106,3 @@ class Login:
       cookie = result.info().getheader('Set-Cookie')
       return cookie
     return None
-

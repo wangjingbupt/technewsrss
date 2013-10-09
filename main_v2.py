@@ -21,10 +21,11 @@ STARTUP_NEWS_RSS_URL = 'http://news.dbanotes.net/rss'
 def getContent(cObj,link):
 
     content = ''
-    style="style=\"font-family: 'Microsoft YaHei';font-size:18px;display: block;margin:20px 0;line-height:28px;\""
-    style2="style=\"font-family: 'Microsoft YaHei';font-size:26px;display: block;margin:20px 0;line-height:32px;\""
-    style3="style=\"font-family: 'Microsoft YaHei';font-size:23px;display: block;margin:20px 0;line-height:28px;\""
-    style4="style=\"font-family: 'Microsoft YaHei';font-size:20px;display: block;margin:20px 0;line-height:28px;\""
+    style="style=\"font-family: 'Microsoft YaHei';font-size:16px;display: block;margin:20px 0;line-height:26px;\""
+    style2="style=\"font-family: 'Microsoft YaHei';font-size:24px;display: block;margin:20px 0;line-height:30px;\""
+    style3="style=\"font-family: 'Microsoft YaHei';font-size:20px;display: block;margin:20px 0;line-height:26px;\""
+    style4="style=\"font-family: 'Microsoft YaHei';font-size:18px;display: block;margin:20px 0;line-height:26px;\""
+    style5="style='margin-left: 10px;'"
   
     url = 'https://www.readability.com/api/content/v1/parser'
     param ={'token':READABILITY_TOKEN,'url':link}
@@ -33,12 +34,13 @@ def getContent(cObj,link):
       return False
     if 'content' in rs:
       c = rs['content']
-      c = re.sub('<([a-z ]+)>','<\\1 '+style+' >',c) 
+      c = re.sub('<ul.*?>','<ul '+style5+' >',c) 
+      c = re.sub('<(div|p|span).*?>','<\\1 '+style+' >',c) 
       c = re.sub('<[hH]1>','<h1 '+style2+' >',c) 
       c = re.sub('<[hH]2>','<h2 '+style3+' >',c) 
       c = re.sub('<[hH]3>','<h3 '+style4+' >',c) 
 
-      content =  HTMLEntity.decode(c)
+      content ='<div style="padding:15px;">'+HTMLEntity.decode(c)+'</div>'
     if len(content) < 1000:
       return False
 
